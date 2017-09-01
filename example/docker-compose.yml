@@ -1,0 +1,54 @@
+version: '3.3'
+
+services:
+
+  elasticsearch:
+    image: zammad/zammad-docker-compose:zammad-elasticsearch
+    labels:
+      io.rancher.container.pull_image: always
+    restart: always
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+
+  mariadb:
+    image: osixia/mariadb:10.2.8
+    labels:
+      io.rancher.container.pull_image: always
+    restart: always
+    environment:
+      MARIADB_ROOT_ALLOWED_NETWORKS: "#PYTHON2BASH:['localhost','127.0.0.1','::1', '172.%.%.%']"
+      MARIADB_DATABASES: "zammad"
+      MARIADB_USERS: "#PYTHON2BASH:[{'zammad': 'zammad'}]"
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  zammad:
+    image: osixia/zammad:1.5.0
+    command: -l trace
+    labels:
+      io.rancher.container.pull_image: always
+    links:
+      - elasticsearch
+      - mariadb
+    ports:
+      - "443:443"
+    restart: always
+    environment:
+      ZAMMAD_DB_HOST: "mariadb"
+      ZAMMAD_DB_NAME: "zammad"
+      ZAMMAD_DB_USER: "zammad"
+      ZAMMAD_DB_PASSWORD: "zammad"
+      ZAMMAD_ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    volumes:
+      - zammad-data:/home/zammad
+      - zammad-backup:/data/backup
+
+volumes:
+  zammad-backup:
+    driver: local
+  zammad-data:
+    driver: local
+  elasticsearch:
+    driver: local
+  mariadb:
+    driver: local

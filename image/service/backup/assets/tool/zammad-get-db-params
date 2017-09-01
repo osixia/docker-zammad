@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+# get database name, user and password from configuration
+# /!\ configuration must use simple quote :)
+# and it's a bad idea to have ' in your username, password and database name
+host="$(grep 'host:' < ${ZAMMAD_DIR}/config/database.yml | sed -e 's/.*username:\(\| \)//g')"
+databaseUser="$(grep 'username:' < ${ZAMMAD_DIR}/config/database.yml | sed -e 's/.*username:\(\| \)//g')"
+databasePassword="$(grep 'password:' < ${ZAMMAD_DIR}/config/database.yml | sed -e 's/.*password:\(\| \)//g')"
+database="$(grep 'database:' < ${ZAMMAD_DIR}/config/database.yml | sed -e 's/.*database:\(\| \) //g')"

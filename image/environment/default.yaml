@@ -1,0 +1,16 @@
+ZAMMAD_DB_HOST: mariadb
+
+ZAMMAD_DB_NAME: zammad
+ZAMMAD_DB_USER: zammad
+ZAMMAD_DB_PASSWORD: zammad
+
+ZAMMAD_ELASTICSEARCH_URL:
+
+SSL_CRT_FILENAME: cert.crt
+SSL_KEY_FILENAME: cert.key
+SSL_CA_CRT_FILENAME: ca.crt
+
+SSL_HELPER_PREFIX: zammad
+
+ZAMMAD_BACKUP_CRON_EXP: 30 4 * * * #every day at 4:30am
+ZAMMAD_BACKUP_TTL: 15 # Delete backups that are over 15 days
