@@ -16,7 +16,7 @@ dateFileFormat="+%Y%m%dT%H%M%S"
 backupFilePath="$backupPath/$(date "$dateFileFormat")$backupFileSuffix"
 
 # save config and plugins except default ones
-tar -czf $backupFilePath -C / var/www/zammad
+tar -czf $backupFilePath -C / ${ZAMMAD_DIR:1}
 chmod 600 $backupFilePath
 
 # backup database
