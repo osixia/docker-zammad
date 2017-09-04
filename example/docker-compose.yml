@@ -40,15 +40,12 @@ services:
       ZAMMAD_DB_PASSWORD: "zammad"
       ZAMMAD_ELASTICSEARCH_URL: "http://elasticsearch:9200"
     volumes:
-      - zammad-data:/home/zammad
       - zammad-backup:/data/backup
 
 volumes:
-  zammad-backup:
-    driver: local
-  zammad-data:
-    driver: local
   elasticsearch:
     driver: local
   mariadb:
+    driver: local
+  zammad-backup:
     driver: local

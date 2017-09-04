@@ -40,7 +40,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   # test is zammad is installed
   ZAMMAD_INSTALLED=$(mysql -h ${ZAMMAD_DB_HOST} -u ${ZAMMAD_DB_USER} -p${ZAMMAD_DB_PASSWORD} ${ZAMMAD_DB_NAME} -e "select id from settings where name='es_url'" || true)
-  if [ -n "" ]; then
+  if [ -n "${ZAMMAD_INSTALLED}" ]; then
     log-helper info "Update database..."
     bundle exec rake db:migrate &> /dev/null
   else
@@ -52,7 +52,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   log-helper info "Elasticsearch config..."
   bundle exec rails r "Setting.set('es_url', '${ZAMMAD_ELASTICSEARCH_URL}')"
-  bundle exec rake searchindex:rebuild
+  bundle exec rake searchindex:rebuild || true
 
   log-helper info "Fix file ownership..."
   chown -R ${ZAMMAD_USER}:${ZAMMAD_USER} ${ZAMMAD_DIR}
