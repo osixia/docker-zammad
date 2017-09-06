@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: default
+  labels:
+    app: mariadb
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: mariadb
+          image: osixia/mariadb:10.2.8
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
+            - name: mariadb-backup
+              mountPath: /data/backup
+          ports:
+            - containerPort: 3306
+              name: mariadb
+          env:
+            - name: MARIADB_DATABASES
+              value: "zammad"
+            - name: MARIADB_USERS
+              value: "#PYTHON2BASH:[{'zammad': 'zammad'}]"
+      volumes:
+        - name: "mariadb-data"
+          emptyDir: {} # change me to persistent storage
+        - name: "mariadb-backup"
+          emptyDir: {} # change me to persistent storage

@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zammad
+  namespace: default
+  labels:
+    app: zammad
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zammad
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: zammad
+          image: osixia/zammad:1.5.0
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 1024Mi
+          volumeMounts:
+            - name: zammad-backup
+              mountPath: /data/backup
+          ports:
+            - containerPort: 443
+          env:
+            - name: ZAMMAD_ELASTICSEARCH_URL
+              value: "http://elasticsearch:9200"
+            - name: ZAMMAD_DB_HOST
+              value: "mariadb"
+            - name: ZAMMAD_DB_NAME
+              value: "zammad"
+            - name: ZAMMAD_DB_USER
+              value: "zammad"
+            - name: ZAMMAD_DB_PASSWORD
+              value: "zammad"
+      volumes:
+        - name: "zammad-backup"
+          emptyDir: {} # change me to persistent storage

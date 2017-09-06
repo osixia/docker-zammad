@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zammad
+  namespace: default
+  labels:
+    app: zammad
+spec:
+  ports:
+    - port: 443
+  selector:
+    app: zammad
