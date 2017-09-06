@@ -5,7 +5,8 @@ services:
   elasticsearch:
     image: zammad/zammad-docker-compose:zammad-elasticsearch
     labels:
-      io.rancher.container.pull_image: always
+      - "io.rancher.container.pull_image: always"
+      - "traefik.enable=false"
     restart: always
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
@@ -13,7 +14,8 @@ services:
   mariadb:
     image: osixia/mariadb:10.2.8
     labels:
-      io.rancher.container.pull_image: always
+      - "io.rancher.container.pull_image: always"
+      - "traefik.enable=false"
     restart: always
     environment:
       MARIADB_ROOT_ALLOWED_NETWORKS: "#PYTHON2BASH:['localhost','127.0.0.1','::1', '172.%.%.%']"
@@ -26,12 +28,15 @@ services:
     image: osixia/zammad:1.5.0
     command: -l trace
     labels:
-      io.rancher.container.pull_image: always
+      - "io.rancher.container.pull_image: always"
+      - "traefik.protocol=https"
+      - "traefik.frontend.rule=Host:zammad.example.org;PathPrefix:/"
+      - "traefik.port=443"
     links:
       - elasticsearch
       - mariadb
     ports:
-      - "443:443"
+      - "6443:443"
     restart: always
     environment:
       ZAMMAD_DB_HOST: "mariadb"
