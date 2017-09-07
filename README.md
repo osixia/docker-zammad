@@ -4,7 +4,7 @@
 ![Docker Stars](https://img.shields.io/docker/stars/osixia/zammad.svg)
 ![](https://images.microbadger.com/badges/image/osixia/zammad.svg)
 
-Latest release: 1.5.0 - Zammad 1.5.0 -  [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/osixia/zammad/) 
+Latest release: 2.1.1 - Zammad 2.1.1 -  [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/osixia/zammad/) 
 
 **A docker image to run Zammad.**
 
