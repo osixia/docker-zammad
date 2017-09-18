@@ -6,8 +6,9 @@ ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 ENV RAILS_SERVER puma
 
-ARG GIT_URL=https://github.com/zammad/zammad.git
-ARG GIT_BRANCH=2.1.1
+ARG ZAMMAD_VERSION=2.0.0
+ARG ZAMMAD_MD5=0ef3e26f048fb9e22ae03daaf2fd54f6
+
 ARG GOSU_VERSION=1.10
 
 ARG LIGHT_BASEIMAGE_VERSION=1.1.0
@@ -23,13 +24,13 @@ RUN apt update \
       curl  \
     && curl -L -o light-baseimage.tar.gz https://github.com/osixia/docker-light-baseimage/archive/v${LIGHT_BASEIMAGE_VERSION}.tar.gz \
     && mkdir -p container \
-    && tar -xf light-baseimage.tar.gz -C container --strip-components 2 docker-light-baseimage-${LIGHT_BASEIMAGE_VERSION}/image \
+    && tar -zxf light-baseimage.tar.gz -C container --strip-components 2 docker-light-baseimage-${LIGHT_BASEIMAGE_VERSION}/image \
     && cd container \
     && ./build.sh \
     && cd - \
     && rm -rf light-baseimage light-baseimage.tar.gz \
     && curl -L -o web-baseimage.tar.gz https://github.com/osixia/docker-web-baseimage/archive/v${WEB_BASEIMAGE_VERSION}.tar.gz \
-    && tar -xf web-baseimage.tar.gz -C container/service-available --strip-components 3 docker-web-baseimage-${WEB_BASEIMAGE_VERSION}/image/service-available \
+    && tar -zxf web-baseimage.tar.gz -C container/service-available --strip-components 3 docker-web-baseimage-${WEB_BASEIMAGE_VERSION}/image/service-available \
     && rm -rf web-baseimage.tar.gz
 
 ENTRYPOINT ["/container/tool/run"]
@@ -58,10 +59,13 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
 	  && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
 	  && chmod +x /usr/local/bin/gosu \
 	  && gosu nobody true \
+    && mkdir -p ${ZAMMAD_DIR} \
     && useradd -M -d ${ZAMMAD_DIR} -s /bin/bash ${ZAMMAD_USER} \
-    && cd $(dirname ${ZAMMAD_DIR}) \
-    && git clone --depth 1 -b "${GIT_BRANCH}" "${GIT_URL}" \
     && cd ${ZAMMAD_DIR} \
+    && curl -L -o zammad.tar.gz https://ftp.zammad.com/zammad-${ZAMMAD_VERSION}.tar.gz \
+    && [ $(md5sum zammad.tar.gz | awk '{ print $1 }') = "${ZAMMAD_MD5}" ] \
+    && tar -zxf zammad.tar.gz \
+    && rm -rf zammad.tar.gz \
     && bundle install --without test development postgres \
     && contrib/packager.io/fetch_locales.rb \
     && sed -e 's#.*adapter: postgresql#  adapter: nulldb#g' < config/database.yml.pkgr > config/database.yml \
