@@ -6,13 +6,13 @@ ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 ENV RAILS_SERVER puma
 
-ARG ZAMMAD_VERSION=2.0.0
-ARG ZAMMAD_MD5=0ef3e26f048fb9e22ae03daaf2fd54f6
+ARG ZAMMAD_VERSION=2.1.0
+ARG ZAMMAD_MD5=afc7471fef4214bfec638c65d37a58d1
 
 ARG GOSU_VERSION=1.10
 
-ARG LIGHT_BASEIMAGE_VERSION=1.1.0
-ARG WEB_BASEIMAGE_VERSION=1.0.0
+ARG LIGHT_BASEIMAGE_VERSION=1.1.1
+ARG WEB_BASEIMAGE_VERSION=1.1.0
 
 # MariaDB version
 ARG MARIADB_MAJOR=10.1
@@ -50,7 +50,7 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
 	  && apt-get -y update \
     && /container/tool/add-multiple-process-stack \
     && /container/tool/add-service-available :nginx :ssl-tools \
-    && apt-get install -y --force-yes --no-install-recommends ${BUILD_DEPENDENCIES} mariadb-client-$MARIADB_MAJOR libmariadbclient-dev && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES} mariadb-client-$MARIADB_MAJOR libmariadbclient-dev && rm -rf /var/lib/apt/lists/* \
 	  && curl -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	  && curl -L -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	  && export GNUPGHOME="$(mktemp -d)" \
