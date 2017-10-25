@@ -4,7 +4,7 @@
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/log-helper
 log-helper level eq trace && set -x
 
-FIRST_START_DONE="/docker-help-center-nginx-first-start-done"
+FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-help-center-nginx-first-start-done"
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 

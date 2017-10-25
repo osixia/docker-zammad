@@ -25,7 +25,7 @@ services:
       - mariadb:/var/lib/mysql
 
   zammad:
-    image: osixia/zammad:2.0.0
+    image: osixia/zammad:2.1.0
     command: -l trace
     labels:
       - "io.rancher.container.pull_image: always"
