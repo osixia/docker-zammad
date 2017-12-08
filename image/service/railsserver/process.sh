@@ -5,9 +5,4 @@
 log-helper level eq trace && set -x
 
 cd ${ZAMMAD_DIR}
-
-if [ "${RAILS_SERVER}" == "puma" ]; then
-  exec gosu ${ZAMMAD_USER}:${ZAMMAD_USER} bundle exec puma -b tcp://127.0.0.1:3000 -e ${RAILS_ENV}
-elif [ "${RAILS_SERVER}" == "unicorn" ]; then
-  exec gosu ${ZAMMAD_USER}:${ZAMMAD_USER} bundle exec unicorn -b 127.0.0.1 -p 3000 -c config/unicorn.rb -E ${RAILS_ENV}
-fi
+exec gosu ${ZAMMAD_USER}:${ZAMMAD_USER} bundle exec rails server puma -b 127.0.0.1 -p 3000 -e ${RAILS_ENV}

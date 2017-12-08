@@ -15,7 +15,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: zammad
-          image: osixia/zammad:2.1.0
+          image: osixia/zammad:2.2.0
           imagePullPolicy: Always
           resources:
             requests:
@@ -28,6 +28,8 @@ spec:
           env:
             - name: ZAMMAD_ELASTICSEARCH_URL
               value: "http://elasticsearch:9200"
+            - name: ZAMMAD_MEMCACHED_HOST
+              value: "memcached"
             - name: ZAMMAD_DB_HOST
               value: "mariadb"
             - name: ZAMMAD_DB_NAME
