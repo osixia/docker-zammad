@@ -42,6 +42,7 @@ spec:
             memory: 1024Mi
           limits:
             memory: 1024Mi
+        terminationGracePeriodSeconds: 10
         env:
         #- name: "bootstrap.memory_lock" should be fixed in next major kubernetes release
         #  value: "true"
@@ -54,6 +55,18 @@ spec:
         volumeMounts:
         - name: elasticsearch-data
           mountPath: /usr/share/elasticsearch/data
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health?local=true
+            port: 9200
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /_cluster/health?local=true
+            port: 9200
+          initialDelaySeconds: 60
+          periodSeconds: 10
       volumes:
         - name: "elasticsearch-data"
           emptyDir: {} # change me to persistent storage

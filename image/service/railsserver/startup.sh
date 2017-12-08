@@ -10,6 +10,11 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   cd ${ZAMMAD_DIR}
 
+  if [ -n "${ZAMMAD_MEMCACHED_HOST}" ]; then
+    log-helper info "Memcached config..."
+    sed -i -e "s/.*config.cache_store.*file_store.*cache_file_store.*/    config.cache_store = :dalli_store, '${ZAMMAD_MEMCACHED_HOST}:11211'\n    config.session_store = :dalli_store, '${ZAMMAD_MEMCACHED_HOST}:11211'/" ${ZAMMAD_DIR}/config/application.rb
+  fi
+
   log-helper info "Database config..."
   # make substitutions
   TO_REPLACE=(
@@ -52,6 +57,12 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   log-helper info "Elasticsearch config..."
   bundle exec rails r "Setting.set('es_url', '${ZAMMAD_ELASTICSEARCH_URL}')"
+
+  if [ -n "${ZAMMAD_ELASTICSEARCH_USER}" ] && [ -n "${ZAMMAD_ELASTICSEARCH_PASS}" ]; then
+    bundle exec rails r "Setting.set('es_user', \"${ZAMMAD_ELASTICSEARCH_USER}\")"
+    bundle exec rails r "Setting.set('es_password', \"${ZAMMAD_ELASTICSEARCH_PASS}\")"
+  fi
+
   bundle exec rake searchindex:rebuild || true
 
   log-helper info "Fix file ownership..."

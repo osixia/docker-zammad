@@ -11,6 +11,13 @@ services:
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
 
+  memcached:
+    command: ["zammad-memcached"]
+    image: zammad/zammad-docker-compose:zammad-memcached
+    labels:
+      io.rancher.container.pull_image: always
+    restart: always
+
   mariadb:
     image: osixia/mariadb:10.2.8
     labels:
@@ -25,8 +32,8 @@ services:
       - mariadb:/var/lib/mysql
 
   zammad:
-    image: osixia/zammad:2.1.0
-    command: -l trace
+    image: osixia/zammad:2.2.0
+    command: -l info
     labels:
       - "io.rancher.container.pull_image: always"
       - "traefik.protocol=https"
@@ -35,6 +42,7 @@ services:
     links:
       - elasticsearch
       - mariadb
+      - memcached
     ports:
       - "6443:443"
     restart: always
@@ -44,6 +52,7 @@ services:
       ZAMMAD_DB_USER: "zammad"
       ZAMMAD_DB_PASSWORD: "zammad"
       ZAMMAD_ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      ZAMMAD_MEMCACHED_HOST: memcached
     volumes:
       - zammad-backup:/data/backup
 
