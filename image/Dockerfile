@@ -1,12 +1,12 @@
-FROM ruby:2.4.1-slim-stretch
+FROM ruby:2.4.2-slim-stretch
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=2.2.0
-ARG ZAMMAD_MD5=d3657d09d8f7cbfc3e37bf8f8d4d82c6
+ARG ZAMMAD_VERSION=2.3.0
+ARG ZAMMAD_MD5=0d118fdde02934e18c0752a033c6a5fb
 
 ARG GOSU_VERSION=1.10
 
