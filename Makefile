@@ -1,5 +1,5 @@
 NAME = osixia/zammad
-VERSION = 2.3.0
+VERSION = 2.4.0
 
 .PHONY: build build-nocache test tag-latest push push-latest release git-tag-version
 
