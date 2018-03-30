@@ -5,8 +5,8 @@ ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=2.3.0
-ARG ZAMMAD_MD5=0d118fdde02934e18c0752a033c6a5fb
+ARG ZAMMAD_VERSION=2.4.0
+ARG ZAMMAD_MD5=97deaaa33b96a1d8a356e102e493ad2a
 
 ARG GOSU_VERSION=1.10
 
@@ -53,7 +53,7 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
 	  && curl -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 	  && curl -L -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 	  && export GNUPGHOME="$(mktemp -d)" \
-	  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+	  && gpg --recv-keys --keyserver ha.pool.sks-keyservers.net 0xB42F6819007F00F88E364FD4036A9C25BF357DD4 \
 	  && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
 	  && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
 	  && chmod +x /usr/local/bin/gosu \
