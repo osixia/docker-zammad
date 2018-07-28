@@ -8,7 +8,7 @@ and this project follows Zammad versioning.
 ### Changed
   - Upgrade Zammad version to 2.5.0
 
-## [2.4.0] - 2018-01-31
+## [2.4.0] - 2018-03-30
 ### Changed
   - Upgrade Zammad version to 2.4.0
 
