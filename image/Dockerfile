@@ -4,8 +4,8 @@ ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=2.5.0
-ARG ZAMMAD_MD5=ec239101243ab068dec361368ca1262a
+ARG ZAMMAD_VERSION=2.6.0
+ARG ZAMMAD_MD5=ede645df6f942cc69b2f948b3855cc1c
 
 ARG GOSU_VERSION=1.10
 
@@ -18,8 +18,8 @@ ARG MARIADB_MAJOR=10.1
 # Install light-baseimage and web-baseimage
 RUN apt update \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-      ca-certificates \
-      curl  \
+    ca-certificates \
+    curl  \
     && curl -L -o light-baseimage.tar.gz https://github.com/osixia/docker-light-baseimage/archive/v${LIGHT_BASEIMAGE_VERSION}.tar.gz \
     && mkdir -p container \
     && tar -zxf light-baseimage.tar.gz -C container --strip-components 2 docker-light-baseimage-${LIGHT_BASEIMAGE_VERSION}/image \
@@ -37,26 +37,26 @@ ENTRYPOINT ["/container/tool/run"]
 RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
     && echo "deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list \
     && { \
-		     echo 'Package: *'; \
-		     echo 'Pin: release o=MariaDB'; \
-		     echo 'Pin-Priority: 999'; \
-	     } > /etc/apt/preferences.d/mariadb
+    echo 'Package: *'; \
+    echo 'Pin: release o=MariaDB'; \
+    echo 'Pin-Priority: 999'; \
+    } > /etc/apt/preferences.d/mariadb
 
 # Install dependencies, GOSU & zammad
 RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
     set -ex \
-	  && apt-get -y update \
+    && apt-get -y update \
     && /container/tool/add-multiple-process-stack \
     && /container/tool/add-service-available :nginx :ssl-tools \
     && apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES} mariadb-client-$MARIADB_MAJOR libmariadbclient-dev && rm -rf /var/lib/apt/lists/* \
-	  && curl -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
-	  && curl -L -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
-	  && export GNUPGHOME="$(mktemp -d)" \
-	  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-	  && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-	  && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
-	  && chmod +x /usr/local/bin/gosu \
-	  && gosu nobody true \
+    && curl -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+    && curl -L -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true \
     && mkdir -p ${ZAMMAD_DIR} \
     && useradd -M -d ${ZAMMAD_DIR} -s /bin/bash ${ZAMMAD_USER} \
     && cd ${ZAMMAD_DIR} \
