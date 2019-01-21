@@ -4,8 +4,8 @@ ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=2.7.0
-ARG ZAMMAD_MD5=a2a260311159f84bf7935eb226f60688
+ARG ZAMMAD_VERSION=2.8.0
+ARG ZAMMAD_MD5=b95b6967ab305f71ee927daf409ab7e7
 
 ARG GOSU_VERSION=1.10
 
@@ -34,7 +34,7 @@ RUN apt update \
 ENTRYPOINT ["/container/tool/run"]
 
 # Add MariaDB repository
-RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
+RUN apt-key adv --no-tty --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
     && echo "deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/$MARIADB_MAJOR/debian stretch main" > /etc/apt/sources.list.d/mariadb.list \
     && { \
     echo 'Package: *'; \
@@ -52,7 +52,7 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
     && curl -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
     && curl -L -o /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
     && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
