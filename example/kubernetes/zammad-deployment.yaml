@@ -15,7 +15,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: zammad
-          image: osixia/zammad:2.8.0
+          image: osixia/zammad:2.9.0
           imagePullPolicy: Always
           resources:
             requests:
