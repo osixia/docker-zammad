@@ -4,8 +4,8 @@ ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=2.8.0
-ARG ZAMMAD_MD5=b95b6967ab305f71ee927daf409ab7e7
+ARG ZAMMAD_VERSION=2.9.0
+ARG ZAMMAD_MD5=08bd2f55770f23ee780a7dbd5c8c4cc8
 
 ARG GOSU_VERSION=1.10
 
@@ -43,7 +43,7 @@ RUN apt-key adv --no-tty --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24
     } > /etc/apt/preferences.d/mariadb
 
 # Install dependencies, GOSU & zammad
-RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev" \
+RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libimlib2 libimlib2-dev" \
     set -ex \
     && apt-get -y update \
     && /container/tool/add-multiple-process-stack \
