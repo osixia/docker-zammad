@@ -6,5 +6,5 @@ log-helper level eq trace && set -x
 
 sv start /container/run/process/railsserver || exit 1
 
-cd ${ZAMMAD_DIR}
-exec gosu ${ZAMMAD_USER}:${ZAMMAD_USER} bundle exec script/scheduler.rb run
+cd "${ZAMMAD_DIR}"
+exec gosu "${ZAMMAD_USER}":"${ZAMMAD_USER}" bundle exec script/scheduler.rb run

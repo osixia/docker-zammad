@@ -8,26 +8,26 @@ databaseFile="database.sql"
 
 for file in "$@"
 do
-    echo "Processing file $file"
-
-    if $(echo "$file" | grep -q -e "$backupFileSuffix"); then
+    echo "Processing file ${file}"
+    
+    if echo "${file}" | grep -q -e "$backupFileSuffix"; then
         echo "Restore zammad files"
-        tar -xvzf $backupPath/$file -C /
-        echo "done :)"
-    elif $(echo "$file" | grep -q -e "$backupDbSuffix"); then
+        tar -xvzf "${backupPath}/${file}" -C /
+        echo "done :)"    
+    elif echo "${file}" | grep -q -e "${backupDbSuffix}"; then
         echo "Restore zammad database"
         . /container/service/backup/assets/tool/zammad-get-db-params
-
-        rm -rf $databaseFile || true
-        tar -xvzf $backupPath/$file
-
-        mysql -u $databaseUser -p$databasePassword --host $host $database < $databaseFile
-
-        rm -rf $databaseFile
-
+        
+        rm -rf "${databaseFile}" || true
+        tar -xvzf "${backupPath}/${file}"
+        
+        mysql -u "${databaseUser}" -p"${databasePassword}" --host "${host}" "${database}" < "${databaseFile}"
+        
+        rm -rf "${databaseFile}"
+        
         echo "done :)"
     else
-      echo "Error: Unknown file type"
+        echo "Error: Unknown file type"
     fi
 done
 
