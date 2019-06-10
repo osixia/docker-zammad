@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project follows Zammad versioning.
 
+## [3.0.0] - 2019-06-10
+### Changed
+  - Upgrade Zammad version to 3.0.0
+
+### Fixed
+  - Shellcheck all scripts
+
 ## [2.9.0] - 2019-02-20
 ### Changed
   - Upgrade Zammad version to 2.9.0
