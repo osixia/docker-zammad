@@ -1,13 +1,13 @@
-FROM ruby:2.4.4-slim-stretch
+FROM ruby:2.5.5-slim-stretch
 
 ENV ZAMMAD_DIR /home/zammad
 ENV ZAMMAD_USER zammad
 ENV RAILS_ENV production
 
-ARG ZAMMAD_VERSION=3.0.0
-ARG ZAMMAD_MD5=5170cfc115ee90e853c1180578fc30da
+# ARG ZAMMAD_VERSION=3.1.0
+# ARG ZAMMAD_MD5=64ea8a6c3b6c630f0fddc6b4711c46a1
 
-ARG GOSU_VERSION=1.10
+ARG GOSU_VERSION=1.11
 
 ARG LIGHT_BASEIMAGE_VERSION=1.1.1
 ARG WEB_BASEIMAGE_VERSION=1.1.0
@@ -43,7 +43,7 @@ RUN apt-key adv --no-tty --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24
     } > /etc/apt/preferences.d/mariadb
 
 # Install dependencies, GOSU & zammad
-RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libimlib2 libimlib2-dev" \
+RUN BUILD_DEPENDENCIES="git patch build-essential libffi-dev libpq5 libpq-dev libimlib2 libimlib2-dev" \
     set -ex \
     && apt-get -y update \
     && /container/tool/add-multiple-process-stack \
@@ -60,13 +60,20 @@ RUN BUILD_DEPENDENCIES="git build-essential libffi-dev libpq5 libpq-dev libimlib
     && mkdir -p ${ZAMMAD_DIR} \
     && useradd -M -d ${ZAMMAD_DIR} -s /bin/bash ${ZAMMAD_USER} \
     && cd ${ZAMMAD_DIR} \
-    && curl -L -o zammad.tar.gz https://ftp.zammad.com/zammad-${ZAMMAD_VERSION}.tar.gz \
-    && [ $(md5sum zammad.tar.gz | awk '{ print $1 }') = "${ZAMMAD_MD5}" ] \
+    && curl -L -o zammad.tar.gz https://github.com/osixia/zammad/releases/download/3.1.0/zammad-fixed.tar.gz \
+    # && curl -L -o zammad.tar.gz https://ftp.zammad.com/zammad-${ZAMMAD_VERSION}.tar.gz \
+    # && [ $(md5sum zammad.tar.gz | awk '{ print $1 }') = "${ZAMMAD_MD5}" ] \
     && tar -zxf zammad.tar.gz \
     && rm -rf zammad.tar.gz \
     && bundle install --without test development postgres \
     && contrib/packager.io/fetch_locales.rb \
+    && curl -L -o zammad.patch https://github.com/zammad/zammad/commit/3f20b05469adaa35dbb4a7e16c24f3fd7a6358ed.patch \
+    && cd ${ZAMMAD_DIR} && patch -p1 -d ${ZAMMAD_DIR} < zammad.patch \
     && sed -e 's#.*adapter: postgresql#  adapter: nulldb#g' < contrib/packager.io/database.yml.pkgr > config/database.yml \
+    && sed -i "/require 'rails\/all'/a require\ 'nulldb'" config/application.rb \
+    && sed -i '/# Use a different logger for distributed setups./a \ \ config.logger = Logger.new(STDOUT)' config/environments/production.rb \
+    && sed -i 's/.*scheduler_\(err\|out\).log.*//g' script/scheduler.rb \
+    && touch db/schema.rb \
     && bundle exec rake assets:precompile \
     && sed -e 's#.*adapter: postgresql#  adapter: mysql2#g' -e 's#.*database:.*#  database: {{ ZAMMAD_DB_NAME }}#g'  -e 's#.*username:.*#  username: {{ ZAMMAD_DB_USER }}#g' -e 's#.*password:.*#  password: {{ ZAMMAD_DB_PASSWORD }}\n  host: {{ ZAMMAD_DB_HOST }}\n#g' < contrib/packager.io/database.yml.pkgr > config/database.yml \
     && rm -r tmp/cache \
