@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project follows Zammad versioning.
 
+## [3.2.0] - 2019-12-05
+### Changed
+  - Upgrade Zammad version to 3.2.0 (osixia chat-no-jquery fix version)
+
 ## [3.1.0] - 2019-10-11
 ### Changed
   - Upgrade Zammad version to 3.1.0 (osixia chat-no-jquery fix version)
@@ -60,6 +64,7 @@ and this project follows Zammad versioning.
 ## 2.0.0 - 2017-10-25
 Initial release
 
+[3.2.0]: https://github.com/osixia/docker-openldap/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/osixia/docker-openldap/compare/v2.9.0...v3.1.0
 [2.9.0]: https://github.com/osixia/docker-openldap/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/osixia/docker-openldap/compare/v2.7.0...v2.8.0

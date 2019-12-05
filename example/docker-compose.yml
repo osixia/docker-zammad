@@ -32,7 +32,7 @@ services:
       - mariadb:/var/lib/mysql
 
   zammad:
-    image: osixia/zammad:3.1.0
+    image: osixia/zammad:3.2.0
     command: -l info
     labels:
       - "io.rancher.container.pull_image: always"
